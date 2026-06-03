@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benefits — FlowSync</title>
+<meta name="description" content="Why hospitals choose FlowSync: reduced operational delays, better resource utilization, improved patient experience, enhanced awareness, and data-driven decisions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flowsync.css">
+<style>
+.subhero{position:relative;overflow:hidden;padding-top:calc(var(--nav-h) + clamp(46px,8vw,100px));padding-bottom:clamp(30px,5vw,50px)}
+.subhero-bg{position:absolute;inset:0;z-index:0}
+.subhero-bg .b{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+.subhero-bg .b1{width:42vw;height:42vw;right:-12vw;top:-16vw;background:radial-gradient(circle,rgba(10,108,255,.45),transparent 70%);animation:d 20s var(--ease-soft) infinite alternate}
+.subhero-bg .b2{width:30vw;height:30vw;left:-10vw;bottom:-16vw;background:radial-gradient(circle,rgba(34,211,238,.3),transparent 70%);animation:d 24s var(--ease-soft) .6s infinite alternate}
+@keyframes d{to{transform:translate(4vw,4vw) scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.subhero-bg .b{animation:none}}
+.subhero-inner{position:relative;z-index:2;max-width:62ch}
+.subhero .display{font-size:clamp(2.4rem,5.6vw,4.4rem);margin:18px 0 20px}
+
+/* stat strip */
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:46px;position:relative;z-index:2}
+.stat-strip .s .k{font-family:var(--display);font-weight:600;font-size:clamp(2rem,3.4vw,2.8rem);letter-spacing:-.03em;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.stat-strip .s p{font-family:var(--mono);font-size:.72rem;color:var(--slate);letter-spacing:.03em;margin-top:8px}
+@media (max-width:680px){.stat-strip{grid-template-columns:1fr 1fr;gap:26px}}
+
+/* benefit rows */
+.brow{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center;padding-block:clamp(46px,6vw,80px)}
+.brow:nth-child(even) .btext{order:2}
+.brow .eyebrow{margin-bottom:16px}
+.brow h2{font-size:clamp(1.7rem,3.2vw,2.5rem)}
+.brow p{color:var(--ink-2);line-height:1.6;margin-top:14px;max-width:46ch}
+.bstat{display:flex;align-items:baseline;gap:12px;margin-top:24px}
+.bstat .big{font-family:var(--display);font-weight:600;font-size:clamp(2.4rem,4vw,3.4rem);letter-spacing:-.03em;color:var(--blue)}
+.bstat .desc{font-family:var(--mono);font-size:.78rem;color:var(--slate);max-width:22ch;line-height:1.4}
+
+/* visual panel */
+.bviz{border-radius:var(--r-xl);padding:30px;min-height:300px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#fff,#eef4fb);border:1px solid var(--line-2);box-shadow:var(--sh)}
+.bviz .vh{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+/* trend line */
+.viz-line svg{width:100%;height:150px}
+/* bars */
+.viz-bars{display:flex;gap:10px;align-items:flex-end;height:170px}
+.viz-bars .bar{flex:1;border-radius:8px 8px 0 0;background:linear-gradient(var(--blue),var(--cyan));height:0;transition:height 1.2s var(--ease);position:relative}
+.viz-bars[data-fill].filled .bar{height:var(--h)}
+.viz-bars .bar span{position:absolute;top:-22px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:.66rem;color:var(--slate)}
+/* gauge */
+.viz-gauge{display:flex;align-items:center;gap:24px}
+.gauge-l{width:150px;height:150px;position:relative;flex:none}
+.gauge-l svg{transform:rotate(-90deg)}
+.gauge-l .tk{fill:none;stroke:rgba(10,108,255,.12);stroke-width:13}
+.gauge-l .vl{fill:none;stroke:url(#gd);stroke-width:13;stroke-linecap:round;stroke-dasharray:408;stroke-dashoffset:408;transition:stroke-dashoffset 1.7s var(--ease)}
+.gauge-l[data-fill].filled .vl{stroke-dashoffset:var(--off)}
+.gauge-l .gn{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:600;font-size:1.8rem}
+.viz-gauge .gl{font-family:var(--mono);font-size:.74rem;color:var(--slate);line-height:1.5}
+/* clock */
+.viz-clock{display:flex;align-items:center;gap:22px}
+.clk{width:130px;height:130px;border-radius:50%;border:10px solid rgba(10,108,255,.12);position:relative;flex:none;display:grid;place-items:center}
+.clk::before,.clk::after{content:"";position:absolute;left:50%;bottom:50%;background:var(--blue);border-radius:3px;transform-origin:bottom}
+.clk::before{width:4px;height:42px;transform:translateX(-50%) rotate(40deg)}
+.clk::after{width:4px;height:30px;transform:translateX(-50%) rotate(-110deg);background:var(--cyan)}
+.clk i{font-family:var(--display);font-weight:600;font-size:1.1rem;color:var(--blue);position:absolute;bottom:14px}
+.down-bars{display:flex;gap:7px;align-items:flex-end;height:80px;flex:1}
+.down-bars b{flex:1;background:linear-gradient(var(--cyan),var(--blue));border-radius:5px 5px 0 0;height:var(--h);opacity:.85}
+@media (max-width:860px){.brow{grid-template-columns:1fr;gap:28px}.brow:nth-child(even) .btext{order:0}}
+
+.cta-band{text-align:center}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="mark"><svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="url(#lg)"/><circle cx="11" cy="12" r="2.4" fill="#fff"/><circle cx="25" cy="11" r="2.4" fill="#fff"/><circle cx="18" cy="25" r="2.4" fill="#fff"/><path d="M11 12 25 11M11 12 18 25M25 11 18 25" stroke="#fff" stroke-width="1.4" opacity=".75"/><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#0A6CFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg></span>
+      <b>Flow<span>Sync</span></b>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="index.html#features" class="nav-link">Features</a>
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="benefits.html" class="nav-link active">Benefits</a>
+      <a href="applications.html" class="nav-link">Applications</a>
+    </div>
+    <div class="nav-cta">
+      <a href="index.html#demo" class="btn btn-primary" data-magnetic>Request a Demo
+        <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="benefits.html">Benefits</a>
+  <a href="applications.html">Applications</a>
+  <a href="index.html#demo" class="mm-cta">Request a Demo →</a>
+</div>
+
+<header class="subhero">
+  <div class="subhero-bg" data-parallax="16"><span class="b b1"></span><span class="b b2"></span></div>
+  <div class="wrap">
+    <div class="subhero-inner" data-reveal>
+      <span class="eyebrow">Benefits</span>
+      <h1 class="display">Why Hospitals Choose <span class="grad-text">FlowSync</span></h1>
+      <p class="lead">Connected intelligence turns everyday operational data into measurable improvements across the facility.</p>
+    </div>
+    <div class="stat-strip" data-stagger="90">
+      <div class="s"><div class="k"><span data-count="40" data-suffix="%">0%</span></div><p>↓ operational delays</p></div>
+      <div class="s"><div class="k"><span data-count="35" data-suffix="%">0%</span></div><p>↑ resource utilization</p></div>
+      <div class="s"><div class="k"><span data-count="25" data-suffix="%">0%</span></div><p>↓ patient wait time</p></div>
+      <div class="s"><div class="k"><span data-count="98" data-suffix="%">0%</span></div><p>operational visibility</p></div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+
+    <!-- 1 -->
+    <div class="brow">
+      <div class="btext" data-reveal="left">
+        <span class="eyebrow">Benefit 01</span>
+        <h2>Reduced Operational Delays</h2>
+        <p>Supports smoother patient movement and service delivery — bottlenecks are surfaced and cleared before they cascade across departments.</p>
+        <div class="bstat"><span class="big"><span data-count="40" data-prefix="−" data-suffix="%">0%</span></span><span class="desc">average system delay times reduced</span></div>
+      </div>
+      <div data-reveal="right" data-scroll-y="0.04">
+        <div class="bviz">
+          <div class="vh"><span class="dot-live"></span>Delay index · trending down</div>
+          <div class="viz-clock">
+            <div class="clk"><i>0:76</i></div>
+            <div class="down-bars"><b style="--h:90%"></b><b style="--h:74%"></b><b style="--h:80%"></b><b style="--h:58%"></b><b style="--h:46%"></b><b style="--h:34%"></b><b style="--h:26%"></b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="brow">
+      <div class="btext" data-reveal="right">
+        <span class="eyebrow">Benefit 02</span>
+        <h2>Better Resource Utilization</h2>
+        <p>Improves visibility into resource allocation and operational performance, so beds, assets, and staff are matched to real-time demand.</p>
+        <div class="bstat"><span class="big"><span data-count="35" data-prefix="+" data-suffix="%">0%</span></span><span class="desc">asset and bed utilization optimized</span></div>
+      </div>
+      <div data-reveal="left" data-scroll-y="0.04">
+        <div class="bviz">
+          <div class="vh">Department utilization</div>
+          <div class="viz-bars" data-fill>
+            <div class="bar" style="--h:62%"><span>OPD</span></div>
+            <div class="bar" style="--h:84%"><span>ER</span></div>
+            <div class="bar" style="--h:52%"><span>Rad</span></div>
+            <div class="bar" style="--h:78%"><span>Lab</span></div>
+            <div class="bar" style="--h:70%"><span>Pharm</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="brow">
+      <div class="btext" data-reveal="left">
+        <span class="eyebrow">Benefit 03</span>
+        <h2>Improved Patient Experience</h2>
+        <p>Contributes to more efficient healthcare interactions — shorter waits, smoother journeys, and clearer communication at every step.</p>
+        <div class="bstat"><span class="big"><span data-count="25" data-prefix="−" data-suffix="%">0%</span></span><span class="desc">patient wait &amp; visit durations shortened</span></div>
+      </div>
+      <div data-reveal="right" data-scroll-y="0.04">
+        <div class="bviz">
+          <div class="vh">Average wait time · weeks</div>
+          <div class="viz-line">
+            <svg viewBox="0 0 320 150" preserveAspectRatio="none" fill="none">
+              <defs><linearGradient id="lg-fall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(10,108,255,.22)"/><stop offset="1" stop-color="rgba(10,108,255,0)"/></linearGradient></defs>
+              <path d="M0 30 L64 48 L128 60 L192 84 L256 104 L320 124 L320 150 L0 150Z" fill="url(#lg-fall)"/>
+              <path data-draw d="M0 30 L64 48 L128 60 L192 84 L256 104 L320 124" stroke="var(--blue)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="brow">
+      <div class="btext" data-reveal="right">
+        <span class="eyebrow">Benefit 04</span>
+        <h2>Enhanced Operational Awareness</h2>
+        <p>Provides a clear understanding of hospital activity patterns, with live visibility into the critical zones that matter most.</p>
+        <div class="bstat"><span class="big"><span data-count="98" data-suffix="%">0%</span></span><span class="desc">visibility into critical operational zones</span></div>
+      </div>
+      <div data-reveal="left" data-scroll-y="0.04">
+        <div class="bviz">
+          <div class="vh">Critical-zone visibility</div>
+          <div class="viz-gauge">
+            <div class="gauge-l" data-fill style="--off:8">
+              <svg width="150" height="150" viewBox="0 0 150 150">
+                <defs><linearGradient id="gd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A6CFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs>
+                <circle class="tk" cx="75" cy="75" r="65"/><circle class="vl" cx="75" cy="75" r="65"/>
+              </svg>
+              <div class="gn" data-count="98" data-suffix="%">0%</div>
+            </div>
+            <div class="gl">Anomaly detection<br><b style="color:var(--blue);font-family:var(--display)">+30%</b> accuracy<br><br>Bottleneck areas<br>mapped in real time</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="brow">
+      <div class="btext" data-reveal="left">
+        <span class="eyebrow">Benefit 05</span>
+        <h2>Data-Driven Decision Making</h2>
+        <p>Supports informed healthcare management strategies — administrators act on evidence, not guesswork, with a decision index that keeps climbing.</p>
+        <div class="bstat"><span class="big"><span data-count="50" data-prefix="+" data-suffix="%">0%</span></span><span class="desc">improvement in decision-making index</span></div>
+      </div>
+      <div data-reveal="right" data-scroll-y="0.04">
+        <div class="bviz">
+          <div class="vh"><span class="dot-live"></span>Decision index · trending up</div>
+          <div class="viz-line">
+            <svg viewBox="0 0 320 150" preserveAspectRatio="none" fill="none">
+              <defs><linearGradient id="lg-rise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(34,211,238,.28)"/><stop offset="1" stop-color="rgba(34,211,238,0)"/></linearGradient></defs>
+              <path d="M0 120 L64 104 L128 86 L192 60 L256 44 L320 22 L320 150 L0 150Z" fill="url(#lg-rise)"/>
+              <path data-draw d="M0 120 L64 104 L128 86 L192 60 L256 44 L320 22" stroke="var(--cyan)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section-pad cta-band" style="background:var(--bg-2)">
+  <div class="wrap" data-reveal>
+    <span class="eyebrow" style="justify-content:center">Outcomes that compound</span>
+    <h2 class="h-xl" style="margin:16px auto 22px;max-width:20ch">Put these numbers to work in your facility</h2>
+    <a href="index.html#demo" class="btn btn-primary btn-lg" data-magnetic>Request a Demo
+      <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <span class="footer-glow"></span>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="foot-brand-col">
+        <div class="foot-brand"><span class="mark" style="width:30px;height:30px"><svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="url(#lg4)"/><circle cx="11" cy="12" r="2.4" fill="#fff"/><circle cx="25" cy="11" r="2.4" fill="#fff"/><circle cx="18" cy="25" r="2.4" fill="#fff"/><path d="M11 12 25 11M11 12 18 25M25 11 18 25" stroke="#fff" stroke-width="1.4" opacity=".75"/><defs><linearGradient id="lg4" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#0A6CFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg></span>FlowSync</div>
+        <p class="foot-desc">Smarter healthcare operations through connected intelligence.</p>
+      </div>
+      <div class="foot-col"><h4>Platform</h4><ul><li><a href="index.html#features">What is FlowSync</a></li><li><a href="how-it-works.html">How It Works</a></li><li><a href="index.html#features">Features</a></li><li><a href="how-it-works.html#technology">Technology</a></li></ul></div>
+      <div class="foot-col"><h4>Solutions</h4><ul><li><a href="applications.html">Hospitals</a></li><li><a href="applications.html">OPD</a></li><li><a href="applications.html">Diagnostics</a></li><li><a href="applications.html">Emergency</a></li><li><a href="applications.html">Networks</a></li></ul></div>
+      <div class="foot-col"><h4>Company</h4><ul><li><a href="index.html">About</a></li><li><a href="#">Careers</a></li><li><a href="#">News</a></li><li><a href="index.html#demo">Contact</a></li></ul></div>
+      <div class="foot-col"><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li><li><a href="#">Compliance</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 FlowSync. All rights reserved.</span><span>hello@flowsync.health</span></div>
+  </div>
+</footer>
+
+<script src="flowsync.js"></script>
+</body>
+</html>

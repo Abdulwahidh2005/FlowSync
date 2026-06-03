@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How It Works — FlowSync</title>
+<meta name="description" content="How FlowSync works: from smart identification and real-time data collection to predictive insights and decision support.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flowsync.css">
+<style>
+.subhero{position:relative;overflow:hidden;padding-top:calc(var(--nav-h) + clamp(46px,8vw,100px));padding-bottom:clamp(20px,4vw,40px)}
+.subhero-bg{position:absolute;inset:0;z-index:0}
+.subhero-bg .b{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+.subhero-bg .b1{width:42vw;height:42vw;right:-12vw;top:-16vw;background:radial-gradient(circle,rgba(10,108,255,.45),transparent 70%);animation:d 20s var(--ease-soft) infinite alternate}
+.subhero-bg .b2{width:32vw;height:32vw;left:-10vw;bottom:-18vw;background:radial-gradient(circle,rgba(34,211,238,.32),transparent 70%);animation:d 24s var(--ease-soft) .6s infinite alternate}
+@keyframes d{to{transform:translate(4vw,4vw) scale(1.12)}}
+@media (prefers-reduced-motion:reduce){.subhero-bg .b{animation:none}}
+.subhero-inner{position:relative;z-index:2;max-width:60ch}
+.subhero .display{font-size:clamp(2.4rem,5.6vw,4.4rem);margin:18px 0 20px}
+
+/* ===== PINNED TIMELINE ===== */
+.pin{position:relative}
+.pin-sticky{position:sticky;top:0;height:100vh;display:flex;align-items:center;overflow:hidden}
+.pin-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,72px);align-items:center;width:100%}
+.pin-left .step-tag{font-family:var(--mono);font-size:.8rem;letter-spacing:.14em;color:var(--blue);margin:22px 0 14px}
+.pin-left .step-tag b{font-size:1.1rem}
+.pin-title{font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.03em;min-height:1.2em}
+.pin-desc{font-size:clamp(1.05rem,1.6vw,1.3rem);line-height:1.6;color:var(--ink-2);margin-top:18px;max-width:46ch;min-height:5em}
+.prog-rail{height:4px;border-radius:4px;background:var(--line);margin-top:34px;overflow:hidden;max-width:360px}
+.prog-rail i{display:block;height:100%;width:0;border-radius:4px;background:var(--grad);transition:width .25s linear}
+.prog-dots{display:flex;gap:8px;margin-top:14px}
+.prog-dots span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .35s var(--ease)}
+.prog-dots span.on{background:var(--blue);transform:scale(1.3)}
+
+/* node chain */
+.chain{position:relative;padding-left:8px}
+.chain .track{position:absolute;left:30px;top:18px;bottom:18px;width:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.chain .track i{position:absolute;left:0;top:0;width:100%;height:0;background:var(--grad);transition:height .25s linear}
+.fnode{display:flex;align-items:center;gap:18px;padding:11px 0;position:relative;opacity:.5;transition:opacity .4s var(--ease)}
+.fnode .ring{width:60px;height:60px;border-radius:16px;flex:none;display:grid;place-items:center;background:#fff;border:1px solid var(--line);
+  color:var(--slate);box-shadow:var(--sh-sm);transition:all .45s var(--ease);position:relative;z-index:2}
+.fnode .ring svg{width:26px;height:26px}
+.fnode .lab b{font-family:var(--display);font-weight:600;font-size:1.05rem;display:block;transition:color .4s}
+.fnode .lab span{font-family:var(--mono);font-size:.68rem;color:var(--slate)}
+.fnode.on{opacity:1}
+.fnode.on .ring{background:var(--grad);color:#fff;border-color:transparent;box-shadow:var(--glow);transform:scale(1.06)}
+.fnode.on .lab b{color:var(--blue)}
+.pin-fallback{display:none}
+@media (max-width:860px){
+  .pin{height:auto!important}
+  .pin-sticky{position:static;height:auto;padding-block:40px}
+  .pin-grid{grid-template-columns:1fr;gap:30px}
+  .pin-left .prog-rail,.pin-left .prog-dots,.pin-desc-dynamic{display:none}
+  .pin-left .pin-title-dynamic{display:none}
+  .chain .track i{height:100%!important}.fnode{opacity:1!important}
+  .fnode .ring{background:var(--grad)!important;color:#fff!important;border-color:transparent!important}
+  .fnode .lab b{color:var(--ink)!important}
+  .fnode .lab .fdesc{display:block;color:var(--slate);font-family:var(--body);font-size:.92rem;margin-top:4px;max-width:42ch}
+}
+.fnode .lab .fdesc{display:none}
+
+/* ===== TECHNOLOGY ===== */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:clamp(34px,5vw,52px)}
+.tech-card{padding:28px;position:relative;overflow:hidden}
+.tech-card .ic{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:rgba(10,108,255,.08);color:var(--blue);margin-bottom:18px;transition:all .4s var(--ease)}
+.tech-card:hover .ic{background:var(--grad);color:#fff;box-shadow:var(--glow)}
+.tech-card .ic svg{width:24px;height:24px}
+.tech-card h3{font-size:1.18rem;margin-bottom:7px}
+.tech-card p{color:var(--slate);font-size:.95rem;line-height:1.5}
+.tech-card .no{position:absolute;top:20px;right:22px;font-family:var(--mono);font-size:.74rem;color:var(--slate-2)}
+@media (max-width:860px){.tech-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.tech-grid{grid-template-columns:1fr}}
+
+/* ===== ARCHITECTURE SHOWCASE ===== */
+.arch{background:var(--ink);color:#C7D6EC;position:relative;overflow:hidden}
+.arch .eyebrow{color:var(--cyan)} .arch .eyebrow::before{background:var(--cyan);box-shadow:0 0 0 4px rgba(34,211,238,.18)}
+.arch h2{color:#fff} .arch .lead{color:#9FB4D4}
+.arch-feature{margin-top:clamp(34px,5vw,52px);border-radius:var(--r-xl);overflow:hidden;border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 30px 80px rgba(0,0,0,.45);background:#fff}
+.arch-feature img{width:100%;display:block}
+.arch-cap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 22px;background:#0a1020;flex-wrap:wrap}
+.arch-cap b{font-family:var(--display);color:#fff;font-size:1.05rem}
+.arch-cap span{font-family:var(--mono);font-size:.7rem;color:#7F92AC;letter-spacing:.04em}
+.arch-two{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+.arch-two .ac{border-radius:var(--r-lg);overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.arch-two .ac img{width:100%;display:block}
+.arch-two .acc{padding:14px 18px;background:#0a1020}
+.arch-two .acc b{font-family:var(--display);color:#fff;font-size:.98rem;display:block}
+.arch-two .acc span{font-family:var(--mono);font-size:.66rem;color:#7F92AC}
+@media (max-width:760px){.arch-two{grid-template-columns:1fr}}
+
+.cta-band{text-align:center}
+.cta-band .btn-lg{margin-top:8px}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="brand">
+      <span class="mark"><svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="url(#lg)"/><circle cx="11" cy="12" r="2.4" fill="#fff"/><circle cx="25" cy="11" r="2.4" fill="#fff"/><circle cx="18" cy="25" r="2.4" fill="#fff"/><path d="M11 12 25 11M11 12 18 25M25 11 18 25" stroke="#fff" stroke-width="1.4" opacity=".75"/><defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#0A6CFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg></span>
+      <b>Flow<span>Sync</span></b>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="index.html#features" class="nav-link">Features</a>
+      <a href="how-it-works.html" class="nav-link active">How It Works</a>
+      <a href="benefits.html" class="nav-link">Benefits</a>
+      <a href="applications.html" class="nav-link">Applications</a>
+    </div>
+    <div class="nav-cta">
+      <a href="index.html#demo" class="btn btn-primary" data-magnetic>Request a Demo
+        <svg class="arw" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How It Works</a>
+  <a href="benefits.html">Benefits</a>
+  <a href="applications.html">Applications</a>
+  <a href="index.html#demo" class="mm-cta">Request a Demo →</a>
+</div>
+
+<header class="subhero">
+  <div class="subhero-bg" data-parallax="16"><span class="b b1"></span><span class="b b2"></span></div>
+  <div class="wrap subhero-inner" data-reveal>
+    <span class="eyebrow">How FlowSync Works</span>
+    <h1 class="display">From wristband to <span class="grad-text">decision</span>, in real time</h1>
+    <p class="lead">Six connected stages turn everyday patient movement into operational intelligence. Scroll to walk through the pipeline.</p>
+  </div>
+</header>
+
+<!-- PINNED 6-STEP TIMELINE -->
+<section class="pin" id="how">
+  <div class="pin-sticky">
+    <div class="wrap pin-grid">
+      <div class="pin-left">
+        <span class="eyebrow">The Pipeline</span>
+        <div class="step-tag">STEP <b id="curNum">01</b> <span style="opacity:.5">/ 06</span></div>
+        <h2 class="pin-title pin-title-dynamic" id="stepTitle">Smart Identification</h2>
+        <p class="pin-desc pin-desc-dynamic" id="stepDesc">Patients are provided with smart wearable devices that enable secure identification and operational monitoring throughout the healthcare environment.</p>
+        <div class="prog-rail"><i id="progFill"></i></div>
+        <div class="prog-dots" id="progDots"><span class="on"></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="pin-right">
+        <div class="chain" id="chain">
+          <div class="track"><i id="chainFill"></i></div>
+          <div class="fnode on" data-i="0">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="4" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.4" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v1M12 16v1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <span class="lab"><b>Smart Identification</b><span>01 · Wearable</span><span class="fdesc">Secure identification and operational monitoring throughout the healthcare environment.</span></span>
+          </div>
+          <div class="fnode" data-i="1">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/></svg></span>
+            <span class="lab"><b>Real-Time Data Collection</b><span>02 · Connected infra</span><span class="fdesc">Movement and operational events are continuously collected through connected infrastructure.</span></span>
+          </div>
+          <div class="fnode" data-i="2">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <span class="lab"><b>Intelligent Processing</b><span>03 · Central platform</span><span class="fdesc">Information is securely processed and organized within a centralized analytics platform.</span></span>
+          </div>
+          <div class="fnode" data-i="3">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16V9M13 16V6M18 16v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <span class="lab"><b>Operational Analysis</b><span>04 · Analytics</span><span class="fdesc">Advanced analytics evaluate utilization, patient flow behavior, and workflow efficiency.</span></span>
+          </div>
+          <div class="fnode" data-i="4">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><path d="M4 17l5-5 4 3 7-8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 4h4v4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="lab"><b>Predictive Insights</b><span>05 · Foresight</span><span class="fdesc">Early awareness of emerging operational challenges and potential bottlenecks.</span></span>
+          </div>
+          <div class="fnode" data-i="5">
+            <span class="ring"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9h18M8 18v3M16 18v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <span class="lab"><b>Decision Support</b><span>06 · Dashboard</span><span class="fdesc">Administrators receive meaningful insights for informed operational decision-making.</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section id="technology" class="section-pad">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Technology</span>
+      <h2 class="h-xl">The Technology Behind FlowSync</h2>
+      <p class="lead">FlowSync combines modern technologies to create a connected healthcare intelligence platform.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="glass tech-card" data-reveal data-delay="0"><span class="no">01</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="4" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" stroke-width="1.7"/></svg></span>
+        <h3>Smart Wearables</h3><p>Enable patient identification and monitoring.</p>
+      </div>
+      <div class="glass tech-card" data-reveal data-delay="80"><span class="no">02</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="20" r="1.4" fill="currentColor"/></svg></span>
+        <h3>Connected Infrastructure</h3><p>Supports continuous operational data collection.</p>
+      </div>
+      <div class="glass tech-card" data-reveal data-delay="160"><span class="no">03</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+        <h3>Edge Computing</h3><p>Facilitates efficient local data processing.</p>
+      </div>
+      <div class="glass tech-card" data-reveal data-delay="0"><span class="no">04</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>Secure Communication</h3><p>Ensures reliable information transmission.</p>
+      </div>
+      <div class="glass tech-card" data-reveal data-delay="80"><span class="no">05</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 1 0 9 9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M12 12 17 7M12 8v4h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h3>Analytics Engine</h3><p>Processes operational information and generates insights.</p>
+      </div>
+      <div class="glass tech-card" data-reveal data-delay="160"><span class="no">06</span>
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M3 9h18M8 18v3M16 18v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+        <h3>Visualization Platform</h3><p>Provides meaningful dashboards and reports.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE SHOWCASE -->
+<section class="arch section-pad">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <span class="eyebrow">Reference Architecture</span>
+      <h2 class="h-xl">Intelligent patient tracking &amp; data flow</h2>
+      <p class="lead">From RFID + BLE wristbands through edge nodes and a secure central server to the AI analytics engine and admin dashboard.</p>
+    </div>
+    <div class="arch-feature" data-reveal="scale">
+      <img src="assets/checkpoint-arch.jpg" alt="FlowSync smart checkpoint architecture — intelligent patient tracking and data flow" loading="lazy">
+      <div class="arch-cap"><b>Smart Checkpoint Architecture</b><span>RFID · BLE · ESP32 edge · secure server · AI engine · dashboard</span></div>
+    </div>
+    <div class="arch-feature" data-reveal="scale" style="margin-top:22px">
+      <img src="assets/system-flow.jpg" alt="FlowSync end-to-end system flow across hospital departments" loading="lazy">
+      <div class="arch-cap"><b>End-to-End System Flow</b><span>Patient journey → sensing → processing → insight → admin action</span></div>
+    </div>
+    <div class="arch-two">
+      <div class="ac" data-reveal data-delay="0">
+        <img src="assets/wearable-exploded.jpg" alt="FlowSync wearable exploded view with labeled components" loading="lazy">
+        <div class="acc"><b>Smart Wearable — Exploded View</b><span>BLE SoC · RFID coil · thin-film battery · adaptive antenna</span></div>
+      </div>
+      <div class="ac" data-reveal data-delay="120">
+        <img src="assets/checkpoint-cutaway.jpg" alt="Ceiling-mounted RFID-BLE smart checkpoint cutaway" loading="lazy">
+        <div class="acc"><b>Ceiling-Mounted Checkpoint</b><span>Directional RFID · BLE array · ESP32 · hospital Wi-Fi</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section-pad cta-band">
+  <div class="wrap" data-reveal>
+    <span class="eyebrow" style="justify-content:center">See it live</span>
+    <h2 class="h-xl" style="margin:16px auto 22px;max-width:18ch">Ready to see FlowSync inside your facility?</h2>
+    <a href="index.html#demo" class="btn btn-primary btn-lg" data-magnetic>Request a Demo
+      <svg class="arw" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <span class="footer-glow"></span>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="foot-brand-col">
+        <div class="foot-brand"><span class="mark" style="width:30px;height:30px"><svg viewBox="0 0 36 36" fill="none"><rect width="36" height="36" rx="10" fill="url(#lg3)"/><circle cx="11" cy="12" r="2.4" fill="#fff"/><circle cx="25" cy="11" r="2.4" fill="#fff"/><circle cx="18" cy="25" r="2.4" fill="#fff"/><path d="M11 12 25 11M11 12 18 25M25 11 18 25" stroke="#fff" stroke-width="1.4" opacity=".75"/><defs><linearGradient id="lg3" x1="0" y1="0" x2="36" y2="36"><stop stop-color="#0A6CFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs></svg></span>FlowSync</div>
+        <p class="foot-desc">Smarter healthcare operations through connected intelligence.</p>
+      </div>
+      <div class="foot-col"><h4>Platform</h4><ul><li><a href="index.html#features">What is FlowSync</a></li><li><a href="how-it-works.html">How It Works</a></li><li><a href="index.html#features">Features</a></li><li><a href="how-it-works.html#technology">Technology</a></li></ul></div>
+      <div class="foot-col"><h4>Solutions</h4><ul><li><a href="applications.html">Hospitals</a></li><li><a href="applications.html">OPD</a></li><li><a href="applications.html">Diagnostics</a></li><li><a href="applications.html">Emergency</a></li><li><a href="applications.html">Networks</a></li></ul></div>
+      <div class="foot-col"><h4>Company</h4><ul><li><a href="index.html">About</a></li><li><a href="#">Careers</a></li><li><a href="#">News</a></li><li><a href="index.html#demo">Contact</a></li></ul></div>
+      <div class="foot-col"><h4>Legal</h4><ul><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li><li><a href="#">Security</a></li><li><a href="#">Compliance</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 FlowSync. All rights reserved.</span><span>react@kct.ac.in</span></div>
+  </div>
+</footer>
+
+<script src="flowsync.js"></script>
+<script>
+/* ----- pinned scrubbed timeline ----- */
+(function(){
+  var steps=[
+    ["Smart Identification","Patients are provided with smart wearable devices that enable secure identification and operational monitoring throughout the healthcare environment."],
+    ["Real-Time Data Collection","As patients move across hospital departments, operational events and movement information are continuously collected through connected infrastructure."],
+    ["Intelligent Processing","The collected information is securely processed and organized within a centralized analytics platform."],
+    ["Operational Analysis","Advanced analytics evaluate operational patterns, department utilization, patient flow behavior, and workflow efficiency."],
+    ["Predictive Insights","The platform identifies emerging operational challenges and provides early awareness of potential bottlenecks."],
+    ["Decision Support","Administrators receive meaningful insights through a centralized dashboard, enabling informed operational decision-making."]
+  ];
+  var pin=document.getElementById("how");
+  var titleEl=document.getElementById("stepTitle"), descEl=document.getElementById("stepDesc"), numEl=document.getElementById("curNum");
+  var fill=document.getElementById("progFill"), chainFill=document.getElementById("chainFill");
+  var dots=document.querySelectorAll("#progDots span"), nodes=document.querySelectorAll("#chain .fnode");
+  var desktop=window.matchMedia("(min-width:861px)").matches;
+  var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // give the pin section scroll room (only on desktop)
+  function setHeight(){ if(desktop && !reduce){ pin.style.height=(steps.length*72)+"vh"; } else { pin.style.height="auto"; } }
+  setHeight();
+
+  var cur=-1;
+  function render(p){
+    p=Math.max(0,Math.min(0.9999,p));
+    var idx=Math.floor(p*steps.length);
+    fill.style.width=(p*100)+"%";
+    chainFill.style.height=(p*100)+"%";
+    if(idx!==cur){
+      cur=idx;
+      titleEl.textContent=steps[idx][0];
+      descEl.textContent=steps[idx][1];
+      numEl.textContent="0"+(idx+1);
+      dots.forEach(function(d,k){ d.classList.toggle("on",k<=idx); });
+      nodes.forEach(function(n,k){ n.classList.toggle("on",k<=idx); });
+    }
+  }
+  function onScroll(){
+    if(!desktop || reduce) return;
+    var rect=pin.getBoundingClientRect();
+    var total=pin.offsetHeight-window.innerHeight;
+    var p=total>0 ? (-rect.top)/total : 0;
+    render(p);
+  }
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",function(){ desktop=window.matchMedia("(min-width:861px)").matches; setHeight(); onScroll(); });
+  onScroll();
+})();
+</script>
+</body>
+</html>
