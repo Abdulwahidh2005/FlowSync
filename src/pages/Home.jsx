@@ -28,17 +28,17 @@ const team = [
   },
   {
     src: '/assets/team-3.jpg',
-    name: 'Krisnan K',
-    role: 'Mechanical Engineer · Engineering Lead',
-    bio: 'Designs and optimizes wearable tracking devices, hardware modules, power management systems, and deployment-ready physical infrastructure for continuous healthcare monitoring applications.',
-    linkedin: 'https://www.linkedin.com/in/krisnan',
-  },
-  {
-    src: '/assets/team-4.jpg',
     name: 'Brathikan VM',
     role: 'Innovation Expert',
     bio: 'Identifies technological opportunities, evaluates novelty, strengthens intellectual property potential, and guides innovation strategy to ensure scalability, practical impact, and long-term technology adoption.',
     linkedin: 'https://www.linkedin.com/in/brathikan',
+  },
+  {
+    src: '/assets/team-4.jpg',
+    name: 'Krisnan K',
+    role: 'Mechanical Engineer · Engineering Lead',
+    bio: 'Designs and optimizes wearable tracking devices, hardware modules, power management systems, and deployment-ready physical infrastructure for continuous healthcare monitoring applications.',
+    linkedin: 'https://www.linkedin.com/in/krisnan',
   },
 ];
 
